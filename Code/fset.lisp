@@ -1884,7 +1884,7 @@ of which may be repeated."
 	    (do-bag-pairs (x n b total)
 	      (when (funcall test item x)
 		(setq total (gen + total n)))))
-	(multiplicity item b)))))
+          (multiplicity b item)))))
 
 (defmethod count-if (pred (b bag) &key key)
   (declare (optimize (speed 3) (safety 0)))
@@ -3150,4 +3150,3 @@ iteration to the index of the current element of `seq'.  When done, returns
 ;;; Oooops -- I somehow thought CL already had this.
 (define-condition simple-program-error (simple-condition program-error)
   ())
-

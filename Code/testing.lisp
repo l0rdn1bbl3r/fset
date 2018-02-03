@@ -370,6 +370,11 @@
 		       ((contains? fs0 r2)
 			(1- (rank fs0 r2))))))
 	(error "Set rank of non-member failed")))
+    (let ((r (do ((r (random 200) (random 200)))
+		 ((not (contains? fs0 r)) r))))
+      (unless (and (= 1 (count r (with fs0 r)))
+                   (zerop (count r fs0)))
+          (error "Set count failed")))
     fs0))
 
 
@@ -517,7 +522,11 @@
 		   (do ((r2 r (1+ r2)))
 		       ((contains? fm0 r2)
 			(1- (rank fm0 r2))))))
-	(error "Map rank of non-member failed")))))
+	(error "Map rank of non-member failed")))
+    (unless (and (= 1 (count 'foo (with fm0 'foo 'bar)))
+                 (zerop (count 'foo (less fm0 'foo))))
+      (error "Map count failed"))))
+
 
 
 (defun Test-Bag-Operations (i)
@@ -663,6 +672,11 @@
 		       ((contains? fb0 r2)
 			(1- (rank fb0 r2))))))
 	(error "Bag rank of non-member failed")))
+    (let ((r (do ((r (random 200) (random 200)))
+		 ((not (contains? fb0 r)) r))))
+      (unless (and (= 1 (count r (with fb0 r)))
+                   (zerop (count r fb0)))
+	(error "Bag count failed")))
     fb0))
 
 
@@ -764,7 +778,12 @@
       (let ((fs0b (less fs0 (random (size fs0)))))
 	(unless (eq (compare fs0a fs0b)
 		    (Seq-Compare (convert 'list fs0a) (convert 'list fs0b)))
-	  (error "Seq compare failed on iteration ~D" i))))))
+	  (error "Seq compare failed on iteration ~D" i))))
+    (let ((r (do ((r (random 200) (random 200)))
+		 ((not (contains? (convert 'set fs0) r)) r))))
+      (unless (and (= 1 (count r (with fs0 0 r)))
+                   (zerop (count r fs0)))
+	(error "Seq count failed")))))
 
 (defun Test-CL-Generic-Sequence-Ops (i fs0 s0 fs1 s1)
   (declare (ignore fs0 s0))		; for now
@@ -1061,4 +1080,3 @@
   (time (dotimes (i n)
 	  (dotimes (j (size seq))
 	    (WB-Seq-Tree-Subscript (wb-seq-contents seq) i)))))
-
